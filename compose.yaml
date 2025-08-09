@@ -1,10 +1,17 @@
 services:
   mysql:
-    image: 'mysql:latest'
+    image: mysql:8.4        # evita 'latest', usa una versión estable
+    container_name: mysql-readapp
+    restart: unless-stopped
     environment:
-      - 'MYSQL_DATABASE=mydatabase'
-      - 'MYSQL_PASSWORD=secret'
-      - 'MYSQL_ROOT_PASSWORD=verysecret'
-      - 'MYSQL_USER=myuser'
+      MYSQL_DATABASE: mydatabase
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: verysecret
+      TZ: America/Argentina/Buenos_Aires
     ports:
-      - '3306'
+      - "3306:3306"          # HOST:CONTENEDOR
+    volumes:
+      - mysql_data:/var/lib/mysql
+volumes:
+  mysql_data:
