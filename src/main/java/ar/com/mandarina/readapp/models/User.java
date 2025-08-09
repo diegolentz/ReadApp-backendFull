@@ -5,7 +5,7 @@ import java.sql.Date;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "users") // opcional, pero recomendable
+@Table(name = "users")
 public class User {
 
     @Id
@@ -23,6 +23,9 @@ public class User {
 
     @Column
     private Date birthdate;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Profile profile;
 
     public User(String name, String lastname, String email, Date birthdate) {
         this.name = name;
@@ -69,6 +72,14 @@ public class User {
 
     public void setBirthdate(Date birthdate) {
         this.birthdate = birthdate;
+    }
+
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
     }
 
 }
