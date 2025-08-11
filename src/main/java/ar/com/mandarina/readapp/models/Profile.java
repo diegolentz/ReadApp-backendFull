@@ -27,6 +27,9 @@ public class Profile {
     @JoinColumn(name = "user_id")
     private User user;
 
+    public Profile() {
+    }
+
     public Profile(String username, String password, User user) {
         this.username = username;
         this.password = password;
