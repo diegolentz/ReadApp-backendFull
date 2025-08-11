@@ -1,6 +1,9 @@
 package ar.com.mandarina.readapp.models;
 
 import java.sql.Date;
+import java.util.List;
+
+import com.mysql.cj.x.protobuf.MysqlxDatatypes.Array;
 
 import jakarta.persistence.*;
 
@@ -26,6 +29,14 @@ public class User {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Profile profile;
+
+    @ManyToMany
+    @JoinTable(name = "users_books_readed", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "book_id"))
+    private List<Book> booksReaded;
+
+    @ManyToMany
+    @JoinTable(name = "users_books_to_read", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "book_id"))
+    private List<Book> booksToRead;
 
     public User() {
     }
