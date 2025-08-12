@@ -40,6 +40,9 @@ public class Book {
     @JoinTable(name = "books_translations", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "translation_id"))
     private List<Translation> translations;
 
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
+    private List<RecomBook> recomendations;
+
     public Book() {
     }
 

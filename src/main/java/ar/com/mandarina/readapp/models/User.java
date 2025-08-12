@@ -42,15 +42,8 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserBook> userBooks;
 
-    public User() {
-    }
-
-    public User(String name, String lastname, String email, Date birthdate) {
-        this.name = name;
-        this.lastname = lastname;
-        this.email = email;
-        this.birthdate = birthdate;
-    }
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Recomendations> recomendations;
 
     public Long getId() {
         return id;
@@ -99,5 +92,33 @@ public class User {
     public void setProfile(Profile profile) {
         this.profile = profile;
     }
+
+    public List<UserBook> getUserBooks() {
+        return userBooks;
+    }
+
+    public void setUserBooks(List<UserBook> userBooks) {
+        this.userBooks = userBooks;
+    }
+
+    public List<Recomendations> getRecomendations() {
+        return recomendations;
+    }
+
+    public void setRecomendations(List<Recomendations> recomendations) {
+        this.recomendations = recomendations;
+    }
+
+    public User() {
+    }
+
+    public User(String name, String lastname, String email, Date birthdate) {
+        this.name = name;
+        this.lastname = lastname;
+        this.email = email;
+        this.birthdate = birthdate;
+    }
+
+  
 
 }

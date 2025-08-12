@@ -1,8 +1,7 @@
 package ar.com.mandarina.readapp;
 
 import java.sql.Date;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,15 +10,21 @@ import org.springframework.stereotype.Component;
 
 import ar.com.mandarina.readapp.Repository.AuthorRepository;
 import ar.com.mandarina.readapp.Repository.BookRepository;
+import ar.com.mandarina.readapp.Repository.RecomendationsRepository;
+import ar.com.mandarina.readapp.Repository.RecomBookRepository;
 import ar.com.mandarina.readapp.Repository.TranslationRepository;
 import ar.com.mandarina.readapp.Repository.UserBookRepository;
 import ar.com.mandarina.readapp.Repository.UserRepository;
+import ar.com.mandarina.readapp.Repository.ValorationRepository;
 import ar.com.mandarina.readapp.models.Author;
 import ar.com.mandarina.readapp.models.Book;
 import ar.com.mandarina.readapp.models.Profile;
+import ar.com.mandarina.readapp.models.RecomBook;
+import ar.com.mandarina.readapp.models.Recomendations;
 import ar.com.mandarina.readapp.models.Translation;
 import ar.com.mandarina.readapp.models.User;
 import ar.com.mandarina.readapp.models.UserBook;
+import ar.com.mandarina.readapp.models.Valoration;
 
 @Component
 public class Bootstrap implements CommandLineRunner {
@@ -35,12 +40,22 @@ public class Bootstrap implements CommandLineRunner {
     @Autowired
     private UserBookRepository userBookRepository;
 
+    // Repos adicionales para recomendaciones
+    @Autowired
+    private RecomendationsRepository recomendationsRepository;
+    @Autowired
+    private RecomBookRepository recomBookRepository;
+    @Autowired
+    private ValorationRepository valorationRepository;
+
     @Override
     public void run(String... args) throws Exception {
         createUsersWithProfiles();
         createTranslations(); // <--- primero creamos los idiomas
         createAuthorsAndBooks(); // <--- después los libros y autores
         usersAddBooks();
+        createRecommendations();
+        userValuatesAnotherRecommendation();
     }
 
     private void createUsersWithProfiles() {
@@ -356,5 +371,71 @@ public class Bootstrap implements CommandLineRunner {
         userBook5.setIsToRead(false);
 
         userBookRepository.saveAll(Arrays.asList(userBook1, userBook2, userBook3, userBook4, userBook5));
+    }
+
+    private void createRecommendations() {
+        List<User> users = userRepository.findAll();
+
+        for (User user : users) {
+            // Buscar libros leídos por el usuario
+            List<UserBook> readBooks = user.getUserBooks().stream()
+                    .filter(UserBook::getIsReaded)
+                    .collect(Collectors.toList());
+
+            if (readBooks.isEmpty())
+                continue; // Salta usuarios sin libros leídos
+
+            // Crear la recomendación
+            Recomendations recomendation = new Recomendations();
+            recomendation.setName("Recomendación de " + user.getName());
+            recomendation.setUser(user);
+
+            recomendationsRepository.save(recomendation);
+
+            // Toma el primer libro leído (o más, si querés cambiar el límite)
+            List<RecomBook> recomBooks = readBooks.stream()
+                    .limit(1)
+                    .map(userBook -> {
+                        RecomBook rb = new RecomBook();
+                        rb.setRecomendation(recomendation);
+                        rb.setBook(userBook.getBook());
+                        rb.setToValorate(false);
+                        rb.setValorated(false);
+                        return rb;
+                    }).collect(Collectors.toList());
+
+            recomBookRepository.saveAll(recomBooks);
+
+            // Asignar la lista de RecomBook a la recomendación (opcional)
+            recomendation.setBooks(recomBooks);
+            recomendationsRepository.save(recomendation);
+        }
+    }
+
+    // === NUEVO: Un usuario valora la recomendación de otro usuario ===
+    private void userValuatesAnotherRecommendation() {
+        List<Recomendations> allRecs = recomendationsRepository.findAll();
+
+        for (Recomendations rec : allRecs) {
+            User creator = rec.getUser();
+            // Buscar un usuario diferente al creador para hacer la valoración
+            User anotherUser = userRepository.findAll().stream()
+                    .filter(u -> !u.getId().equals(creator.getId()))
+                    .findFirst().orElse(null);
+
+            if (anotherUser == null)
+                continue;
+
+            // Valorar el primer RecomBook de la recomendación (puedes recorrer todos si
+            // quieres)
+            for (RecomBook rb : rec.getBooks()) {
+                Valoration val = new Valoration();
+                val.setRecomBook(rb);
+                val.setUser(anotherUser);
+                val.setValue(5); // Valor fijo, puedes randomizarlo
+                val.setDescription("¡Excelente selección!");
+                valorationRepository.save(val);
+            }
+        }
     }
 }
