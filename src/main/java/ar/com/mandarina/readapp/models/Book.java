@@ -33,11 +33,8 @@ public class Book {
     @JoinColumn(name = "author_id", nullable = false)
     private Author author;
 
-    @ManyToMany(mappedBy = "booksReaded")
-    private List<User> usersReaded;
-
-    @ManyToMany(mappedBy = "booksToRead")
-    private List<User> usersToRead;
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
+    private List<UserBook> userBooks;
 
     @ManyToMany
     @JoinTable(name = "books_translations", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "translation_id"))
@@ -86,19 +83,12 @@ public class Book {
         this.author = author;
     }
 
-    public List<User> getUsersReaded() {
-        return usersReaded;
+    public List<UserBook> getUserBooks() {
+        return userBooks;
     }
 
-    public void setUsersReaded(List<User> usersReaded) {
-        this.usersReaded = usersReaded;
+    public void setUserBooks(List<UserBook> userBooks) {
+        this.userBooks = userBooks;
     }
 
-    public List<User> getUsersToRead() {
-        return usersToRead;
-    }
-
-    public void setUsersToRead(List<User> usersToRead) {
-        this.usersToRead = usersToRead;
-    }
 }

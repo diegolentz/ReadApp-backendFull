@@ -10,14 +10,16 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import ar.com.mandarina.readapp.Repository.AuthorRepository;
-import ar.com.mandarina.readapp.Repository.UserRepository;
-import ar.com.mandarina.readapp.Repository.TranslationsRepository;
 import ar.com.mandarina.readapp.Repository.BookRepository;
+import ar.com.mandarina.readapp.Repository.TranslationRepository;
+import ar.com.mandarina.readapp.Repository.UserBookRepository;
+import ar.com.mandarina.readapp.Repository.UserRepository;
 import ar.com.mandarina.readapp.models.Author;
 import ar.com.mandarina.readapp.models.Book;
 import ar.com.mandarina.readapp.models.Profile;
 import ar.com.mandarina.readapp.models.Translation;
 import ar.com.mandarina.readapp.models.User;
+import ar.com.mandarina.readapp.models.UserBook;
 
 @Component
 public class Bootstrap implements CommandLineRunner {
@@ -27,15 +29,18 @@ public class Bootstrap implements CommandLineRunner {
     @Autowired
     private AuthorRepository authorRepository;
     @Autowired
-    private TranslationsRepository translationRepository;
+    private TranslationRepository translationRepository;
     @Autowired
     private BookRepository bookRepository;
+    @Autowired
+    private UserBookRepository userBookRepository;
 
     @Override
     public void run(String... args) throws Exception {
         createUsersWithProfiles();
         createTranslations(); // <--- primero creamos los idiomas
         createAuthorsAndBooks(); // <--- después los libros y autores
+        usersAddBooks();
     }
 
     private void createUsersWithProfiles() {
@@ -302,5 +307,54 @@ public class Bootstrap implements CommandLineRunner {
         authorRepository.save(asimov);
         authorRepository.save(verne);
 
+    }
+
+    private void usersAddBooks() {
+        // Recuperar los usuarios
+        User uno = userRepository.findById(1L).orElseThrow(() -> new RuntimeException("User not found"));
+        User dos = userRepository.findById(2L).orElseThrow(() -> new RuntimeException("User not found"));
+        User tres = userRepository.findById(3L).orElseThrow(() -> new RuntimeException("User not found"));
+        User cuatro = userRepository.findById(4L).orElseThrow(() -> new RuntimeException("User not found"));
+        User cinco = userRepository.findById(5L).orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Recuperar los libros
+        Book libro1 = bookRepository.findById(1L).orElseThrow(() -> new RuntimeException("Book not found"));
+        Book libro2 = bookRepository.findById(2L).orElseThrow(() -> new RuntimeException("Book not found"));
+        Book libro3 = bookRepository.findById(3L).orElseThrow(() -> new RuntimeException("Book not found"));
+        Book libro4 = bookRepository.findById(4L).orElseThrow(() -> new RuntimeException("Book not found"));
+        Book libro5 = bookRepository.findById(5L).orElseThrow(() -> new RuntimeException("Book not found"));
+
+        // Asignar libros a usuarios
+        UserBook userBook1 = new UserBook();
+        userBook1.setUser(uno);
+        userBook1.setBook(libro1);
+        userBook1.setIsReaded(true);
+        userBook1.setIsToRead(false);
+
+        UserBook userBook2 = new UserBook();
+        userBook2.setUser(uno);
+        userBook2.setBook(libro2);
+        userBook2.setIsReaded(false);
+        userBook2.setIsToRead(true);
+
+        UserBook userBook3 = new UserBook();
+        userBook3.setUser(dos);
+        userBook3.setBook(libro3);
+        userBook3.setIsReaded(true);
+        userBook3.setIsToRead(false);
+
+        UserBook userBook4 = new UserBook();
+        userBook4.setUser(tres);
+        userBook4.setBook(libro4);
+        userBook4.setIsReaded(false);
+        userBook4.setIsToRead(true);
+
+        UserBook userBook5 = new UserBook();
+        userBook5.setUser(cuatro);
+        userBook5.setBook(libro5);
+        userBook5.setIsReaded(true);
+        userBook5.setIsToRead(false);
+
+        userBookRepository.saveAll(Arrays.asList(userBook1, userBook2, userBook3, userBook4, userBook5));
     }
 }
