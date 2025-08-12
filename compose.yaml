@@ -7,7 +7,7 @@ services:
       MYSQL_DATABASE: mydatabase
       MYSQL_USER: myuser
       MYSQL_PASSWORD: secret
-      MYSQL_ROOT_PASSWORD: verysecret
+      MYSQL_ROOT_PASSWORD: secret
       TZ: America/Argentina/Buenos_Aires
     ports:
       - "3306:3306"          # HOST:CONTENEDOR
