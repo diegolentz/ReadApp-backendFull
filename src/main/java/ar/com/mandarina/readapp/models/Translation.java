@@ -15,7 +15,7 @@ public class Translation {
     @Column(nullable = false)
     private String language;
 
-    @ManyToMany(mappedBy = "translations")
+    @ManyToMany(mappedBy = "translations", fetch = FetchType.LAZY)
     private List<Book> books;
 
     public Translation() {}
