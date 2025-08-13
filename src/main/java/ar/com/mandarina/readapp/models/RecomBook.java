@@ -5,6 +5,7 @@ import java.util.List;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -21,11 +22,11 @@ public class RecomBook {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recomendation_id", nullable = false)
     private Recomendations recomendation;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
 
@@ -35,7 +36,7 @@ public class RecomBook {
     @Column
     private boolean valorated;
 
-    @OneToMany(mappedBy = "recomBook", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "recomBook", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Valoration> valorations;
 
     public Long getId() {

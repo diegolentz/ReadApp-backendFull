@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ar.com.mandarina.readapp.models.User;
+import ar.com.mandarina.readapp.dtos.UserDto;
 import ar.com.mandarina.readapp.services.UserService;
 
 @RestController
@@ -18,7 +18,7 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    public List<User> getUsers() {
+    public List<UserDto> getUsers() {
         return userService.getAllUsers();
     }
 
