@@ -17,7 +17,7 @@ public class LoginService {
 
     public Long validateCredentials(String username, String password) {
         Profile user = loginRepository.findByUsername(username)
-                .orElseThrow(() -> new NotFoundException("No se encontro " + username));
+                .orElseThrow(() -> new NotFoundException("Credenciales incorrectas"));
         if (!user.getPassword().equals(password)) {
             throw new InvalidCredentialsException();
         }
