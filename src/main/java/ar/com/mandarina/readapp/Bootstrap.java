@@ -59,19 +59,19 @@ public class Bootstrap implements CommandLineRunner {
     }
 
     private void createUsersWithProfiles() {
-        User diego = new User("Diego", "Lentz", "diego@gmail.com", Date.valueOf("1992-04-19"));
+        User diego = new User("Diego", "Lentz", "diego@gmail.com", Date.valueOf("1992-04-19"),"https://imgs.search.brave.com/kJXuk64IUlo2fu0HReXcsP_IK_GcwyjuY9hgWQ5gMCg/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9jZG4u/cGl4YWJheS5jb20v/cGhvdG8vMjAyNC8w/Ni8wNi8xNi81My9h/aS1nZW5lcmF0ZWQt/ODgxMzExOV82NDAu/anBn");
         diego.setProfile(new Profile("diego", "zxc", diego));
 
-        User pedro = new User("Pedro", "Geraghty", "pedro@mandarina.com", Date.valueOf("1965-10-30"));
+        User pedro = new User("Pedro", "Geraghty", "pedro@mandarina.com", Date.valueOf("1965-10-30"),"https://imgs.search.brave.com/kJXuk64IUlo2fu0HReXcsP_IK_GcwyjuY9hgWQ5gMCg/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9jZG4u/cGl4YWJheS5jb20v/cGhvdG8vMjAyNC8w/Ni8wNi8xNi81My9h/aS1nZW5lcmF0ZWQt/ODgxMzExOV82NDAu/anBn");
         pedro.setProfile(new Profile("pedro", "pedro", pedro));
 
-        User matias = new User("Matias", "Diaz", "matias@mandarina.com", Date.valueOf("1990-10-30"));
+        User matias = new User("Matias", "Diaz", "matias@mandarina.com", Date.valueOf("1990-10-30"),"https://imgs.search.brave.com/kJXuk64IUlo2fu0HReXcsP_IK_GcwyjuY9hgWQ5gMCg/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9jZG4u/cGl4YWJheS5jb20v/cGhvdG8vMjAyNC8w/Ni8wNi8xNi81My9h/aS1nZW5lcmF0ZWQt/ODgxMzExOV82NDAu/anBn");
         matias.setProfile(new Profile("matias", "matias", matias));
 
-        User adrian = new User("Adrian", "Perez", "adrian@mandarina.com", Date.valueOf("1985-10-30"));
+        User adrian = new User("Adrian", "Perez", "adrian@mandarina.com", Date.valueOf("1985-10-30"),"https://imgs.search.brave.com/kJXuk64IUlo2fu0HReXcsP_IK_GcwyjuY9hgWQ5gMCg/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9jZG4u/cGl4YWJheS5jb20v/cGhvdG8vMjAyNC8w/Ni8wNi8xNi81My9h/aS1nZW5lcmF0ZWQt/ODgxMzExOV82NDAu/anBn");
         adrian.setProfile(new Profile("adrian", "adrian", adrian));
 
-        User valentin = new User("Valentin", "Pugliese", "valentin@mandarina.com", Date.valueOf("1995-10-30"));
+        User valentin = new User("Valentin", "Pugliese", "valentin@mandarina.com", Date.valueOf("1995-10-30"),"https://imgs.search.brave.com/kJXuk64IUlo2fu0HReXcsP_IK_GcwyjuY9hgWQ5gMCg/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9jZG4u/cGl4YWJheS5jb20v/cGhvdG8vMjAyNC8w/Ni8wNi8xNi81My9h/aS1nZW5lcmF0ZWQt/ODgxMzExOV82NDAu/anBn");
         valentin.setProfile(new Profile("valentin", "valentin", valentin));
 
         List<User> users = Arrays.asList(diego, pedro, matias, adrian, valentin);

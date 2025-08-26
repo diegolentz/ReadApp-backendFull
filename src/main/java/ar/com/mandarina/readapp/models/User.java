@@ -121,11 +121,12 @@ public class User {
     public User() {
     }
 
-    public User(String name, String lastname, String email, Date birthdate) {
+    public User(String name, String lastname, String email, Date birthdate, String img) {
         this.name = name;
         this.lastname = lastname;
         this.email = email;
         this.birthdate = birthdate;
+        this.img = img;
     }
 
 
