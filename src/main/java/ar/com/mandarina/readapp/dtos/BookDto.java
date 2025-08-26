@@ -3,18 +3,23 @@ package ar.com.mandarina.readapp.dtos;
 import java.util.List;
 
 public class BookDto {
-   private Long id;
+    private Long id;
     private String title;
     private Integer pages;
+    private String img;
+
     private AuthorDto author;
     private List<TranslationDto> translations;
 
-    public BookDto() {}
+    public BookDto() {
+    }
 
-    public BookDto(Long id, String title, Integer pages, AuthorDto author, List<TranslationDto> translations) {
+    public BookDto(Long id, String title, Integer pages, String img, AuthorDto author,
+            List<TranslationDto> translations) {
         this.id = id;
         this.title = title;
         this.pages = pages;
+        this.img = img;
         this.author = author;
         this.translations = translations;
     }
@@ -58,4 +63,13 @@ public class BookDto {
     public void setTranslations(List<TranslationDto> translations) {
         this.translations = translations;
     }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
 }

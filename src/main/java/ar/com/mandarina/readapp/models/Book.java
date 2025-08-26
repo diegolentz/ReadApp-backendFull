@@ -29,6 +29,17 @@ public class Book {
 
     @Column(name = "pages")
     private Integer pages;
+    
+    @Column(name = "img")
+    private String img;
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", nullable = false)
@@ -43,6 +54,8 @@ public class Book {
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<RecomBook> recomendations;
+
+
 
     public Book() {
     }

@@ -25,21 +25,25 @@ public class BookService {
         if (books.isEmpty()) {
             throw new NotFoundException("No se encontraron libros");
         }
-        return books.stream().map(book -> {
-            AuthorDto authorDto = new AuthorDto(
+        return books.stream()
+            .sorted(java.util.Comparator.comparing(b -> b.getTitle() == null ? "" : b.getTitle(), String.CASE_INSENSITIVE_ORDER))
+            .map(book -> {
+                AuthorDto authorDto = new AuthorDto(
                     book.getAuthor().getId(),
                     book.getAuthor().getName(),
                     book.getAuthor().getLastName());
-            List<TranslationDto> translationDtos = book.getTranslations().stream()
+                List<TranslationDto> translationDtos = book.getTranslations().stream()
                     .map(tr -> new TranslationDto(tr.getId(), tr.getLanguage()))
                     .collect(Collectors.toList());
-            return new BookDto(
+                return new BookDto(
                     book.getId(),
                     book.getTitle(),
                     book.getPages(),
+                    book.getImg(),
                     authorDto,
                     translationDtos);
-        }).collect(Collectors.toList());
+            })
+            .collect(Collectors.toList());
     }
 
 }
