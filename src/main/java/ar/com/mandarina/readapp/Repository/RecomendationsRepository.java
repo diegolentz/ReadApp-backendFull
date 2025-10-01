@@ -12,4 +12,6 @@ public interface RecomendationsRepository extends JpaRepository<Recomendations, 
     @EntityGraph(attributePaths = {"user", "books"})
     List<Recomendations> findAll();
 
+
+
 }

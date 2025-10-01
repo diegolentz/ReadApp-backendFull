@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ar.com.mandarina.readapp.dtos.BookDto;
 import ar.com.mandarina.readapp.services.BookService;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @RestController
@@ -25,6 +27,10 @@ public class BookController {
     public ResponseEntity<List<BookDto>> getBooks() {
         return ResponseEntity.ok(bookService.getAllBooks());
     }
-    
+
+    @GetMapping("/books/search")
+    public ResponseEntity<List<BookDto>> searchBooks(@RequestParam(name = "text") String text) {
+        return ResponseEntity.ok(bookService.searchBooks(text));
+    }
 
 }

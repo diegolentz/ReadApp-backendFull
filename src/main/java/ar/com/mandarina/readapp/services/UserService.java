@@ -9,6 +9,7 @@ import ar.com.mandarina.readapp.Repository.UserRepository;
 import ar.com.mandarina.readapp.dtos.LoginDto;
 import ar.com.mandarina.readapp.dtos.UserDto;
 import ar.com.mandarina.readapp.exceptions.NotFoundException;
+import ar.com.mandarina.readapp.models.User;
 
 @Service
 public class UserService {
@@ -40,6 +41,10 @@ public class UserService {
             user.getImg()
         ))
         .orElseThrow(() -> new NotFoundException("Credenciales incorrectas"));
+  }
+
+  public List<User> getUsersByIds(List<Long> usersId) {
+    return userRepository.findAllById(usersId);
   }
 
 }

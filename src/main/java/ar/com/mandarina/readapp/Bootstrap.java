@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import ar.com.mandarina.readapp.Repository.AuthorRepository;
 import ar.com.mandarina.readapp.Repository.BookRepository;
+import ar.com.mandarina.readapp.Repository.GenereRepository;
 import ar.com.mandarina.readapp.Repository.RecomendationsRepository;
 import ar.com.mandarina.readapp.Repository.RecomBookRepository;
 import ar.com.mandarina.readapp.Repository.TranslationRepository;
@@ -18,6 +19,8 @@ import ar.com.mandarina.readapp.Repository.UserRepository;
 import ar.com.mandarina.readapp.Repository.ValorationRepository;
 import ar.com.mandarina.readapp.models.Author;
 import ar.com.mandarina.readapp.models.Book;
+import ar.com.mandarina.readapp.models.Genere;
+import ar.com.mandarina.readapp.models.GenereType;
 import ar.com.mandarina.readapp.models.Profile;
 import ar.com.mandarina.readapp.models.RecomBook;
 import ar.com.mandarina.readapp.models.Recomendations;
@@ -39,6 +42,8 @@ public class Bootstrap implements CommandLineRunner {
     private BookRepository bookRepository;
     @Autowired
     private UserBookRepository userBookRepository;
+    @Autowired
+    private GenereRepository genereRepository;
 
     // Repos adicionales para recomendaciones
     @Autowired
@@ -54,24 +59,30 @@ public class Bootstrap implements CommandLineRunner {
         createTranslations(); // <--- primero creamos los idiomas
         createAuthorsAndBooks(); // <--- después los libros y autores
         usersAddBooks();
+        createGeneres();
         createRecommendations();
         userValuatesAnotherRecommendation();
     }
 
     private void createUsersWithProfiles() {
-        User diego = new User("Diego", "Lentz", "diego@gmail.com", Date.valueOf("1992-04-19"),"https://imgs.search.brave.com/kJXuk64IUlo2fu0HReXcsP_IK_GcwyjuY9hgWQ5gMCg/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9jZG4u/cGl4YWJheS5jb20v/cGhvdG8vMjAyNC8w/Ni8wNi8xNi81My9h/aS1nZW5lcmF0ZWQt/ODgxMzExOV82NDAu/anBn");
-        diego.setProfile(new Profile("diego", "zxc", diego));
+        User diego = new User("Diego", "Lentz", "diego@gmail.com", Date.valueOf("1992-04-19"),
+                "https://randomuser.me/api/portraits/men/10.jpg");
+        diego.setProfile(new Profile("diego", "diego", diego));
 
-        User pedro = new User("Pedro", "Geraghty", "pedro@mandarina.com", Date.valueOf("1965-10-30"),"https://imgs.search.brave.com/kJXuk64IUlo2fu0HReXcsP_IK_GcwyjuY9hgWQ5gMCg/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9jZG4u/cGl4YWJheS5jb20v/cGhvdG8vMjAyNC8w/Ni8wNi8xNi81My9h/aS1nZW5lcmF0ZWQt/ODgxMzExOV82NDAu/anBn");
+        User pedro = new User("Pedro", "Geraghty", "pedro@mandarina.com", Date.valueOf("1965-10-30"),
+                "https://randomuser.me/api/portraits/men/20.jpg");
         pedro.setProfile(new Profile("pedro", "pedro", pedro));
 
-        User matias = new User("Matias", "Diaz", "matias@mandarina.com", Date.valueOf("1990-10-30"),"https://imgs.search.brave.com/kJXuk64IUlo2fu0HReXcsP_IK_GcwyjuY9hgWQ5gMCg/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9jZG4u/cGl4YWJheS5jb20v/cGhvdG8vMjAyNC8w/Ni8wNi8xNi81My9h/aS1nZW5lcmF0ZWQt/ODgxMzExOV82NDAu/anBn");
+        User matias = new User("Matias", "Diaz", "matias@mandarina.com", Date.valueOf("1990-10-30"),
+                "https://randomuser.me/api/portraits/men/30.jpg");
         matias.setProfile(new Profile("matias", "matias", matias));
 
-        User adrian = new User("Adrian", "Perez", "adrian@mandarina.com", Date.valueOf("1985-10-30"),"https://imgs.search.brave.com/kJXuk64IUlo2fu0HReXcsP_IK_GcwyjuY9hgWQ5gMCg/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9jZG4u/cGl4YWJheS5jb20v/cGhvdG8vMjAyNC8w/Ni8wNi8xNi81My9h/aS1nZW5lcmF0ZWQt/ODgxMzExOV82NDAu/anBn");
+        User adrian = new User("Adrian", "Perez", "adrian@mandarina.com", Date.valueOf("1985-10-30"),
+                "https://randomuser.me/api/portraits/men/40.jpg");
         adrian.setProfile(new Profile("adrian", "adrian", adrian));
 
-        User valentin = new User("Valentin", "Pugliese", "valentin@mandarina.com", Date.valueOf("1995-10-30"),"https://imgs.search.brave.com/kJXuk64IUlo2fu0HReXcsP_IK_GcwyjuY9hgWQ5gMCg/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9jZG4u/cGl4YWJheS5jb20v/cGhvdG8vMjAyNC8w/Ni8wNi8xNi81My9h/aS1nZW5lcmF0ZWQt/ODgxMzExOV82NDAu/anBn");
+        User valentin = new User("Valentin", "Pugliese", "valentin@mandarina.com", Date.valueOf("1995-10-30"),
+                "https://randomuser.me/api/portraits/men/50.jpg");
         valentin.setProfile(new Profile("valentin", "valentin", valentin));
 
         List<User> users = Arrays.asList(diego, pedro, matias, adrian, valentin);
@@ -368,6 +379,11 @@ public class Bootstrap implements CommandLineRunner {
         Book libro3 = bookRepository.findById(3L).orElseThrow(() -> new RuntimeException("Book not found"));
         Book libro4 = bookRepository.findById(4L).orElseThrow(() -> new RuntimeException("Book not found"));
         Book libro5 = bookRepository.findById(5L).orElseThrow(() -> new RuntimeException("Book not found"));
+        Book libro6 = bookRepository.findById(6L).orElseThrow(() -> new RuntimeException("Book not found"));
+        Book libro7 = bookRepository.findById(7L).orElseThrow(() -> new RuntimeException("Book not found"));
+        Book libro8 = bookRepository.findById(8L).orElseThrow(() -> new RuntimeException("Book not found"));
+        Book libro9 = bookRepository.findById(9L).orElseThrow(() -> new RuntimeException("Book not found"));
+        Book libro10 = bookRepository.findById(10L).orElseThrow(() -> new RuntimeException("Book not found"));
 
         // Asignar libros a usuarios
         UserBook userBook1 = new UserBook();
@@ -379,8 +395,8 @@ public class Bootstrap implements CommandLineRunner {
         UserBook userBook2 = new UserBook();
         userBook2.setUser(uno);
         userBook2.setBook(libro2);
-        userBook2.setIsReaded(false);
-        userBook2.setIsToRead(true);
+        userBook2.setIsReaded(true);
+        userBook2.setIsToRead(false);
 
         UserBook userBook3 = new UserBook();
         userBook3.setUser(dos);
@@ -389,18 +405,61 @@ public class Bootstrap implements CommandLineRunner {
         userBook3.setIsToRead(false);
 
         UserBook userBook4 = new UserBook();
-        userBook4.setUser(tres);
+        userBook4.setUser(dos);
         userBook4.setBook(libro4);
-        userBook4.setIsReaded(false);
-        userBook4.setIsToRead(true);
+        userBook4.setIsReaded(true);
+        userBook4.setIsToRead(false);
 
         UserBook userBook5 = new UserBook();
-        userBook5.setUser(cuatro);
+        userBook5.setUser(tres);
         userBook5.setBook(libro5);
         userBook5.setIsReaded(true);
         userBook5.setIsToRead(false);
 
-        userBookRepository.saveAll(Arrays.asList(userBook1, userBook2, userBook3, userBook4, userBook5));
+        UserBook userBook6 = new UserBook();
+        userBook6.setUser(tres);
+        userBook6.setBook(libro6);
+        userBook6.setIsReaded(true);
+        userBook6.setIsToRead(false);
+
+        UserBook userBook7 = new UserBook();
+        userBook7.setUser(cuatro);
+        userBook7.setBook(libro7);
+        userBook7.setIsReaded(true);
+        userBook7.setIsToRead(false);
+
+        UserBook userBook8 = new UserBook();
+        userBook8.setUser(cuatro);
+        userBook8.setBook(libro8);
+        userBook8.setIsReaded(true);
+        userBook8.setIsToRead(false);
+
+        UserBook userBook9 = new UserBook();
+        userBook9.setUser(tres);
+        userBook9.setBook(libro9);
+        userBook9.setIsReaded(true);
+        userBook9.setIsToRead(false);
+
+        UserBook userBook10 = new UserBook();
+        userBook10.setUser(dos);
+        userBook10.setBook(libro10);
+        userBook10.setIsReaded(true);
+        userBook10.setIsToRead(false);
+
+        userBookRepository.saveAll(Arrays.asList(userBook1, userBook2, userBook3, userBook4, userBook5, userBook6,
+                userBook7, userBook8, userBook9, userBook10));
+    }
+
+    public void createGeneres() {
+        List<GenereType> generos = Arrays.asList(GenereType.values());
+        List<Genere> generes = generos.stream()
+                .map(genereType -> {
+                    Genere g = new Genere();
+                    g.setGenere(genereType);
+                    return g;
+                })
+                .collect(Collectors.toList());
+        genereRepository.saveAll(generes);
     }
 
     private void createRecommendations() {
@@ -417,14 +476,25 @@ public class Bootstrap implements CommandLineRunner {
 
             // Crear la recomendación
             Recomendations recomendation = new Recomendations();
-            recomendation.setName("Recomendación de " + user.getName());
+            List<String> nombres = Arrays.asList(
+                    "¡No te pierdas estos libros!",
+                    "Mis favoritos del mes",
+                    "Lecturas recomendadas para ti",
+                    "Libros que cambiaron mi vida");
+            // Asignar los nombres en orden a cada usuario
+            List<Genere> generes = genereRepository.findAll();
+
+            int userIndex = users.indexOf(user) % nombres.size();
+            String nombreAsignado = nombres.get(userIndex);
+            recomendation.setTitle(nombreAsignado);
             recomendation.setUser(user);
+            recomendation.setGenere(generes.get(userIndex));
 
             recomendationsRepository.save(recomendation);
 
             // Toma el primer libro leído (o más, si querés cambiar el límite)
             List<RecomBook> recomBooks = readBooks.stream()
-                    .limit(1)
+                    // .limit(3)
                     .map(userBook -> {
                         RecomBook rb = new RecomBook();
                         rb.setRecomendation(recomendation);

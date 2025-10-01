@@ -15,22 +15,26 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="recomendations")
+@Table(name = "recomendations")
 public class Recomendations {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @Column
-    private String name;
-    
+    private String title;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "recomendation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<RecomBook> books;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "genere_id", nullable = false)
+    private Genere genere;
 
     public Long getId() {
         return id;
@@ -40,12 +44,21 @@ public class Recomendations {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getName() {
+        return user.getName();
+    }
+
+
+    public String getLastname() {
+        return user.getLastname();
     }
 
     public User getUser() {
@@ -62,6 +75,13 @@ public class Recomendations {
 
     public void setBooks(List<RecomBook> books) {
         this.books = books;
+    }
+
+    public void setGenere(Genere genere) {
+        this.genere = genere;
+    }
+    public Genere getGenere() {
+        return genere;
     }
 
     public Recomendations() {

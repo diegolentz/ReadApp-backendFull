@@ -45,5 +45,25 @@ public class BookService {
             })
             .collect(Collectors.toList());
     }
+    public List<BookDto> searchBooks(String text) {
+        return bookRepository.findByTitleContainingIgnoreCase(text).stream()
+            .map(book -> {
+                AuthorDto authorDto = new AuthorDto(
+                    book.getAuthor().getId(),
+                    book.getAuthor().getName(),
+                    book.getAuthor().getLastName());
+                List<TranslationDto> translationDtos = book.getTranslations().stream()
+                    .map(tr -> new TranslationDto(tr.getId(), tr.getLanguage()))
+                    .collect(Collectors.toList());
+                return new BookDto(
+                    book.getId(),
+                    book.getTitle(),
+                    book.getPages(),
+                    book.getImg(),
+                    authorDto,
+                    translationDtos);
+            })
+            .collect(Collectors.toList());
+    }
 
 }
