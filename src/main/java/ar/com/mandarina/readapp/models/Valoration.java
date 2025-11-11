@@ -13,17 +13,10 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "valorations")
 public class Valoration {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "recom_book_id", nullable = false)
-    private RecomBook recomBook;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
 
     @Column(name = "value", nullable = false)
     private Integer value;
@@ -31,28 +24,38 @@ public class Valoration {
     @Column(name = "description", length = 500)
     private String description;
 
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "recom_id", nullable = false)
+    private Recomendations recommendations;
+
+    public Valoration() {
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public Recomendations getRecommendations() {
+        return recommendations;
+    }
+
+    public void setRecommendations(Recomendations recommendations) {
+        this.recommendations = recommendations;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public RecomBook getRecomBook() {
-        return recomBook;
-    }
-
-    public void setRecomBook(RecomBook recomBook) {
-        this.recomBook = recomBook;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public Integer getValue() {

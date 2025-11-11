@@ -6,4 +6,6 @@ import ar.com.mandarina.readapp.models.Genere;
 
 public interface GenereRepository extends JpaRepository<Genere, Long> {
 
+    public Genere findByGenere(String genero);
+
 }

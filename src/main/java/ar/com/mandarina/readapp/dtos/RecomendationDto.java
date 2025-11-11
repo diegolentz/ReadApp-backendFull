@@ -2,7 +2,7 @@ package ar.com.mandarina.readapp.dtos;
 
 import java.util.List;
 
-import ar.com.mandarina.readapp.models.Genere;
+import ar.com.mandarina.readapp.models.Book;
 import ar.com.mandarina.readapp.models.Recomendations;
 
 public class RecomendationDto {
@@ -13,7 +13,7 @@ public class RecomendationDto {
     private String userName;
     private String userLastname;
     private List<String> books;
-    private String img = "";
+    private String img;
     private String genere; // Añadido para el género
 
     public String getGenere() {
@@ -87,9 +87,9 @@ public class RecomendationDto {
         this.userName = recomendation.getUser().getName();
         this.userLastname = recomendation.getUser().getLastname();
         this.books = recomendation.getBooks().stream()
-                .map(rb -> rb.getBook().getTitle())
+                .map(Book::getTitle)
                 .toList();
-        this.genere = recomendation.getGenere().getGenere().getDisplayName();
+        this.img = recomendation.getUser().getImg();
     }
 
 

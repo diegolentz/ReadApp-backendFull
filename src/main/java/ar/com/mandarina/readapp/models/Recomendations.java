@@ -2,7 +2,6 @@ package ar.com.mandarina.readapp.models;
 
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,6 +9,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -25,19 +26,46 @@ public class Recomendations {
     @Column
     private String title;
 
+    @Column
+    private String description;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "recomendation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<RecomBook> books;
+    @OneToMany(mappedBy = "recommendations", fetch = FetchType.LAZY)
+    private List<Valoration> valorations;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "genere_id", nullable = false)
-    private Genere genere;
+    @ManyToMany
+    @JoinTable(name = "recommendations_books", joinColumns = @JoinColumn(name = "recommendation_id"), inverseJoinColumns = @JoinColumn(name = "book_id"))
+    private List<Book> books;
+
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
+    }
 
     public Long getId() {
         return id;
+    }
+
+    public List<Valoration> getValorations() {
+        return valorations;
+    }
+
+    public void setValorations(List<Valoration> valorations) {
+        this.valorations = valorations;
     }
 
     public void setId(Long id) {
@@ -56,7 +84,6 @@ public class Recomendations {
         return user.getName();
     }
 
-
     public String getLastname() {
         return user.getLastname();
     }
@@ -69,19 +96,11 @@ public class Recomendations {
         this.user = user;
     }
 
-    public List<RecomBook> getBooks() {
-        return books;
-    }
-
-    public void setBooks(List<RecomBook> books) {
-        this.books = books;
-    }
-
-    public void setGenere(Genere genere) {
-        this.genere = genere;
-    }
-    public Genere getGenere() {
-        return genere;
+    public Double getRating() {
+        return this.valorations.stream()
+            .mapToDouble(Valoration::getValue)
+            .average()
+            .orElse(0.0);
     }
 
     public Recomendations() {

@@ -16,11 +16,9 @@ import jakarta.persistence.Table;
 @Table(name = "authors")
 public class Author {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
 
     @Column
     private String name;

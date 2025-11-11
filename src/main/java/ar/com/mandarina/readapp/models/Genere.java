@@ -1,29 +1,31 @@
 package ar.com.mandarina.readapp.models;
 
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
 @Table
 public class Genere {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "genere", nullable = false, unique = true)
-    private GenereType genere;
-    
-        public Genere() {
-        }
+    private String genere;
 
-    public Genere(GenereType genereString) {
-            this.genere = genereString;
-        }
+    @OneToMany(mappedBy = "genere")
+    private List<Book> books;
+
+    public Genere() {
+    }
 
     public Long getId() {
         return id;
@@ -33,11 +35,19 @@ public class Genere {
         this.id = id;
     }
 
-    public GenereType getGenere() {
+    public String getGenere() {
         return genere;
     }
 
-    public void setGenere(GenereType genere) {
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
+    }
+
+    public void setGenere(String genere) {
         this.genere = genere;
     }
 
