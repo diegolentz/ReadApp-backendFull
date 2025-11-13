@@ -84,4 +84,35 @@ public class BookController {
                 .toList();
     }
 
+    @GetMapping("/mybooks/search")
+    public List<BookDto> searchMyBooks(@RequestParam(name = "userId") Long userId,
+                                       @RequestParam(name = "text") String text) {
+        User user = userService.getUser(userId);
+        List<Book> books = user.getBooks();
+        
+        
+        return books.stream()
+                .filter(book -> book.getTitle().toLowerCase().contains(text.toLowerCase()))
+                .map(book -> {
+                    var authorDto = new AuthorDto(
+                            book.getAuthor().getId(),
+                            book.getAuthor().getName(),
+                            book.getAuthor().getLastName());
+                    var translationDtos = book.getTranslations().stream()
+                            .map(tr -> new TranslationDto(tr.getId(), tr.getLanguage()))
+                            .toList();
+                    return new BookDto(
+                            book.getId(),
+                            book.getTitle(),
+                            book.getPages(),
+                            book.getImg(),
+                            book.getGenere().getGenere(),
+                            authorDto,
+                            translationDtos,
+                            book.getPrice());
+                })
+                .toList();
+    }
+    
+
 }

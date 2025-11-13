@@ -11,6 +11,7 @@ import ar.com.mandarina.readapp.Repository.BookRepository;
 import ar.com.mandarina.readapp.dtos.AuthorDto;
 import ar.com.mandarina.readapp.dtos.BookDto;
 import ar.com.mandarina.readapp.dtos.TranslationDto;
+import ar.com.mandarina.readapp.models.Book;
 
 @Service
 public class BookService {
@@ -107,5 +108,8 @@ public class BookService {
             );
         });
 }
+    public Book getBookById(long id) {
+           return bookRepository.findById(id).orElse(null);
+    }
    
 }

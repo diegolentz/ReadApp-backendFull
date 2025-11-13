@@ -197,4 +197,44 @@ public class User {
         return valoration;
     }
 
+    public void sellBook(Long bookId) {
+        Book bookToRemove = this.books.stream()
+            .filter(book -> book.getId().equals(bookId))
+            .findFirst()
+            .orElse(null);
+
+        if (bookToRemove != null) {
+            Double bookPrice = bookToRemove.getPrice();
+            this.money += bookPrice;
+            this.books.remove(bookToRemove);
+        }
+    }
+
+    public void buyBook(Book book) {
+            Double bookPrice = book.getPrice();
+            if (canBuy(book.getPrice()) && notHaveBook(book.getId())) {
+                this.money -= bookPrice;
+                this.books.add(book);
+            } else {
+                throw new IllegalArgumentException("Insufficient funds to buy the book.");
+            }
+    }
+
+    public boolean canBuy(Double price) {
+        boolean sufficientFunds = this.money >= price;
+        if (!sufficientFunds) {
+            throw new IllegalArgumentException("Insufficient funds to buy the book.");
+        }
+        return sufficientFunds;
+    }
+
+    public boolean notHaveBook(Long bookId) {
+        boolean notOwned = this.books.stream().noneMatch(book -> book.getId().equals(bookId));
+        if (!notOwned) {
+            throw new IllegalArgumentException("User already owns the book.");
+        }
+        return notOwned;
+    
+    }
+
 }
