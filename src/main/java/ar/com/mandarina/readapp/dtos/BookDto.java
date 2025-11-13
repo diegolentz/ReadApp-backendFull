@@ -7,6 +7,24 @@ public class BookDto {
     private String title;
     private Integer pages;
     private String img;
+    private String genere;
+    private Double price;
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public String getGenere() {
+        return genere;
+    }
+
+    public void setGenere(String genere) {
+        this.genere = genere;
+    }
 
     private AuthorDto author;
     private List<TranslationDto> translations;
@@ -14,12 +32,15 @@ public class BookDto {
     public BookDto() {
     }
 
-    public BookDto(Long id, String title, Integer pages, String img, AuthorDto author,
-            List<TranslationDto> translations) {
+    public BookDto(Long id, String title, Integer pages, String img, String genere, AuthorDto author,
+            List<TranslationDto> translations, Double price) {
         this.id = id;
         this.title = title;
         this.pages = pages;
         this.img = img;
+        this.genere = genere;
+        this.price = price;
+    
         this.author = author;
         this.translations = translations;
     }

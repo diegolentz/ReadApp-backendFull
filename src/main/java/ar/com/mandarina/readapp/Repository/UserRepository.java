@@ -9,7 +9,7 @@ import ar.com.mandarina.readapp.models.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    @EntityGraph(attributePaths = "userBooks")
+    @EntityGraph(attributePaths = "books")
     List<User> findAll();
 
 }

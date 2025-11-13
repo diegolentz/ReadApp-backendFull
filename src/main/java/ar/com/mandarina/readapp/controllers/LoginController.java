@@ -1,7 +1,5 @@
 package ar.com.mandarina.readapp.controllers;
 
-import javax.security.auth.login.LoginContext;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,7 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ar.com.mandarina.readapp.dtos.LoginDto;
 import ar.com.mandarina.readapp.dtos.LoginRequest;
-import ar.com.mandarina.readapp.exceptions.NotFoundException;
 import ar.com.mandarina.readapp.services.LoginService;
 import ar.com.mandarina.readapp.services.UserService;
 

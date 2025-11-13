@@ -2,10 +2,8 @@ package ar.com.mandarina.readapp.models;
 
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -13,47 +11,32 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "authors")
-public class Author {
+@Table
+public class Genere {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    private String name;
+    @Column(name = "genere", nullable = false, unique = true)
+    private String genere;
 
-    @Column
-    private String lastName;
-
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "genere")
     private List<Book> books;
 
-    public Author() {
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public Genere() {
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getLastName() {
-        return lastName;
+    public String getGenere() {
+        return genere;
     }
 
     public List<Book> getBooks() {
@@ -62,6 +45,10 @@ public class Author {
 
     public void setBooks(List<Book> books) {
         this.books = books;
+    }
+
+    public void setGenere(String genere) {
+        this.genere = genere;
     }
 
 }
