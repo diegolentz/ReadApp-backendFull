@@ -14,14 +14,16 @@ public class RecomendationDto {
     private String userLastname;
     private List<String> books;
     private String img;
-    private String genere; // Añadido para el género
+    private List<Double> rate;
 
-    public String getGenere() {
-        return genere;
+
+    
+    public List<Double> getRate() {
+        return rate;
     }
 
-    public void setGenere(String genere) {
-        this.genere = genere;
+    public void setRate(List<Double> rate) {
+        this.rate = rate;
     }
 
     public long getId() {
@@ -90,6 +92,12 @@ public class RecomendationDto {
                 .map(Book::getTitle)
                 .toList();
         this.img = recomendation.getUser().getImg();
+        this.rate = recomendation.getValorations().stream()
+                .map(valoration -> Double.valueOf(valoration.getValue()))
+                .toList();
+    }
+
+    public RecomendationDto() {
     }
 
 

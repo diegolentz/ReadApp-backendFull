@@ -2,6 +2,7 @@ package ar.com.mandarina.readapp.models;
 
 import java.util.List;
 
+import ar.com.mandarina.readapp.dtos.ValorateRecomendationDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -33,7 +34,7 @@ public class Recomendations {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "recommendations", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "recommendations", fetch = FetchType.LAZY, cascade = jakarta.persistence.CascadeType.ALL)
     private List<Valoration> valorations;
 
     @ManyToMany
@@ -64,8 +65,14 @@ public class Recomendations {
         return valorations;
     }
 
-    public void setValorations(List<Valoration> valorations) {
-        this.valorations = valorations;
+    public void setValorations(ValorateRecomendationDTO valoration) {
+        Valoration newValoration = new Valoration();
+        newValoration.setValue(valoration.getRate().intValue());
+        newValoration.setUserId(valoration.getUserId());
+        newValoration.setDescription(valoration.getComment());
+        newValoration.setRecommendations(this);
+
+        this.valorations.add(newValoration);
     }
 
     public void setId(Long id) {
@@ -104,5 +111,15 @@ public class Recomendations {
     }
 
     public Recomendations() {
+    }
+
+    public void createValoration(ValorateRecomendationDTO data) {
+        Long rate = data.getRate();
+        Valoration valoration = new Valoration();
+        valoration.setValue(rate.intValue());
+        valoration.setUserId(data.getUserId());
+        valoration.setDescription(data.getComment());
+        this.valorations.add(valoration);
+
     }
 }

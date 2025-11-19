@@ -1,14 +1,12 @@
 package ar.com.mandarina.readapp.services;
 
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import ar.com.mandarina.readapp.Repository.RecomendationsRepository;
-import ar.com.mandarina.readapp.dtos.RecomendationDto;
 import ar.com.mandarina.readapp.models.Recomendations;
+import jakarta.transaction.Transactional;
 
 @Service
 public class RecomendationService {
@@ -18,8 +16,17 @@ public class RecomendationService {
         this.recomendationRepository = recomendationRepository;
     }
 
-    public Page<RecomendationDto> getAllRecomendations(Pageable pageable) {
-        return recomendationRepository.findAll(pageable).map(RecomendationDto::new);
+    public Page<Recomendations> getAllRecomendations(Pageable pageable) {
+        return recomendationRepository.findAll(pageable);
+    }
+
+    public Recomendations getRecomendationById(Long id) {
+        return recomendationRepository.findById(id).orElse(null);
+    }
+
+    @Transactional
+    public void saveRecomendation(Recomendations recomendation) {
+        recomendationRepository.save(recomendation);
     }
     
 }

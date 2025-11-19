@@ -552,57 +552,76 @@ public class Bootstrap implements CommandLineRunner {
                 User valentin = users.stream()
                                 .filter(u -> u.getName().equalsIgnoreCase("Valentin")).findFirst().orElse(null);
 
-                List<Book> booksDiego = diego.getFirstBooks(2);
-                List<Book> booksPedro = pedro.getFirstBooks(2);
-                List<Book> booksMatias = matias.getFirstBooks(3);
-                List<Book> booksAdrian = adrian.getFirstBooks(3);
-                List<Book> booksValentin = valentin.getFirstBooks(2);
+                // Generar recomendaciones variadas para cada usuario
+                List<Recomendations> allRecs = new ArrayList<>();
 
-                Recomendations recoDiego = diego.createRecommendation("Mejores libros para el tiempo libre",
-                                "estos estan buenardos", booksDiego);
-                Recomendations recoPedro = pedro.createRecommendation("Libros para pensar", "estos estan buenardos",
-                                booksPedro);
-                Recomendations recoMatias = matias.createRecommendation("Libros para no dormir",
-                                "estos estan buenardos", booksMatias);
-                Recomendations recoAdrian = adrian.createRecommendation("Libros para viajar sin moverse",
-                                "estos estan buenardos", booksAdrian);
-                Recomendations recoValentin = valentin.createRecommendation("Libros para aprender a cocinar",
-                                "estos estan buenardos", booksValentin);
+                for (int i = 1; i <= 4; i++) {
+                        List<Book> booksDiego = diego.getFirstBooks((i % 3) + 2);
+                        allRecs.add(diego.createRecommendation(
+                                "Recomendación Diego #" + i,
+                                "Descripción de la recomendación Diego " + i,
+                                booksDiego));
+                }
+                for (int i = 1; i <= 4; i++) {
+                        List<Book> booksPedro = pedro.getFirstBooks((i % 3) + 2);
+                        allRecs.add(pedro.createRecommendation(
+                                "Recomendación Pedro #" + i,
+                                "Descripción de la recomendación Pedro " + i,
+                                booksPedro));
+                }
+                for (int i = 1; i <= 4; i++) {
+                        List<Book> booksMatias = matias.getFirstBooks((i % 3) + 2);
+                        allRecs.add(matias.createRecommendation(
+                                "Recomendación Matias #" + i,
+                                "Descripción de la recomendación Matias " + i,
+                                booksMatias));
+                }
+                for (int i = 1; i <= 4; i++) {
+                        List<Book> booksAdrian = adrian.getFirstBooks((i % 3) + 2);
+                        allRecs.add(adrian.createRecommendation(
+                                "Recomendación Adrian #" + i,
+                                "Descripción de la recomendación Adrian " + i,
+                                booksAdrian));
+                }
+                for (int i = 1; i <= 4; i++) {
+                        List<Book> booksValentin = valentin.getFirstBooks((i % 3) + 2);
+                        allRecs.add(valentin.createRecommendation(
+                                "Recomendación Valentin #" + i,
+                                "Descripción de la recomendación Valentin " + i,
+                                booksValentin));
+                }
 
-                recomendationsRepository
-                                .saveAll(Arrays.asList(recoDiego, recoPedro, recoMatias, recoAdrian, recoValentin));
+                // Solo guardar las primeras 20 recomendaciones
+                recomendationsRepository.saveAll(allRecs.subList(0, 20));
                 userRepository.saveAll(List.of(diego, pedro, matias, adrian, valentin));
         }
 
         // === Un usuario valora la recomendación de otro usuario ===
         private void createValoration() {
                 List<User> users = userRepository.findAll();
-                User diego = users.stream()
-                                .filter(u -> u.getName().equalsIgnoreCase("Diego")).findFirst().orElse(null);
-                User pedro = users.stream()
-                                .filter(u -> u.getName().equalsIgnoreCase("Pedro")).findFirst().orElse(null);
-                User matias = users.stream()
-                                .filter(u -> u.getName().equalsIgnoreCase("Matias")).findFirst().orElse(null);
-                // User adrian = users.stream()
-                // .filter(u ->
-                // u.getName().equalsIgnoreCase("Adrian")).findFirst().orElse(null);
-                // User valentin = users.stream()
-                // .filter(u ->
-                // u.getName().equalsIgnoreCase("Valentin")).findFirst().orElse(null);
-
                 List<Recomendations> allRecs = recomendationsRepository.findAll();
 
-                Valoration valDiego = diego.createValoration(5, "Excelente recomendación, me encantó!", allRecs.get(3));
-                Valoration valPedro = pedro.createValoration(4, "Muy buena selección de libros.", allRecs.get(0));
-                Valoration valMatias = matias.createValoration(3, "La recomendación estuvo bien, pero esperaba más.",
-                                allRecs.get(1));
+                // Solo usuarios que NO sean el creador pueden valorar la recomendación
+                List<Valoration> valorations = new ArrayList<>();
 
-                allRecs.get(0).setValorations(List.of(valDiego));
-                allRecs.get(1).setValorations(List.of(valPedro));
-                allRecs.get(3).setValorations(List.of(valMatias));
+                for (int i = 0; i < allRecs.size(); i++) {
+                        Recomendations rec = allRecs.get(i);
+                        User creator = rec.getUser();
+                        // Elegir un usuario distinto al creador para valorar
+                        Optional<User> valuerOpt = users.stream()
+                                .filter(u -> !u.getId().equals(creator.getId()))
+                                .findAny();
+                        if (valuerOpt.isPresent()) {
+                                User valuer = valuerOpt.get();
+                                int score = 3 + (i % 3); // puntaje entre 3 y 5
+                                String comment = "Valoración #" + (i + 1) + " por " + valuer.getName();
+                                Valoration val = valuer.createValoration(score, comment, rec);
+                                valorations.add(val);
+                                // rec.setValorations(Arrays.asList(val)); // Removed: setValorations expects ValorateRecomendationDTO, not List<Valoration>
+                        }
+                }
 
-                valorationRepository.saveAll(Arrays.asList(valDiego, valPedro, valMatias));
-                recomendationsRepository.saveAll(Arrays.asList(allRecs.get(0), allRecs.get(1), allRecs.get(3)));
-
+                valorationRepository.saveAll(valorations);
+                recomendationsRepository.saveAll(allRecs);
         }
 }
